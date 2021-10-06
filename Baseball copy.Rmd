@@ -1,0 +1,70 @@
+---
+title: "Wednesday Feb 20"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+setwd("~/Desktop")
+library(dplyr)
+library(ggplot2)
+S2017 <- read.csv("2017a.csv")
+S2018 <- read.csv("2018a.csv")
+S2017 <- na.omit(S2017)
+S2018 <- na.omit(S2018)
+```
+
+```{r}
+summary(S2018)
+sd(S2018$R.G)
+```
+
+```{r}
+S2017 <- S2017 %>% mutate(year = 2017)
+S2018 <- S2018 %>% mutate(year = 2018)
+Baseball <- as.data.frame(rbind(S2017, S2018))
+```
+
+```{r}
+Baseball1 <- Baseball %>% select(Tm,R,X1B,X2B,X3B,HR,SO,BB,SB,CS,year)
+```
+
+```{r}
+reg <- lm(R~X1B+X2B+X3B+HR+BB, Baseball1)
+summary(reg)
+```
+
+```{r}
+reg1 <- lm(R~HR, Baseball1)
+summary(reg1)
+baseball1 <- cbind(Baseball1,reg1$residuals)
+baseball1 <- baseball1 %>%
+  rename(residuals = "reg1$residuals")
+baseball1 %>%
+  ggplot(aes(residuals))+
+  geom_histogram()
+baseball1 %>%
+  ggplot(aes(HR,residuals))+
+  geom_point()
+```
+
+
+
+
+```{r}
+t.test(R~year, Baseball1, var.equal = TRUE)
+reg <- lm(R~year, Baseball1)
+summary(reg)
+Baseball1 %>%
+  ggplot(aes(year, R))+
+  geom_jitter(width = 0.05)+
+  geom_smooth(method = "lm")
+```
+
+
+1. Residuals should be normally distributed.
+2. Residuals homoscedastistic
+3. Residuals independent
