@@ -1,7 +1,13 @@
 tacocat
+
 cattaco
+
 tacocat
+
 This word is spelled the same ways backwards as it is forwards
+
+It is a palindrome
+
 Cool
 
 **Author** Ben Rahal
@@ -11,5 +17,6 @@ Files:
   cats.csv
   tacos.csv
   
+ 
   
  
